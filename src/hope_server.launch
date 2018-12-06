@@ -1,0 +1,54 @@
+<launch>
+
+<node name="diff_tf.py" pkg="hope_server" type="diff_tf.py"/>
+
+<node name="pid_left.py" pkg="hope_server" type="pid_left.py"/>
+
+<node name="pid_right.py" pkg="hope_server" type="pid_right.py"/>
+
+<node name="twist_to_motors.py" pkg="hope_server" type="twist_to_motors.py"/>
+
+
+
+<!--loading the map-->
+<node name="map_server" pkg="map_server" type="map_server"
+args="$(find hope_server)/maps/ensi.yaml"/>
+
+<!--localise the robot in the map-->
+<include file="$(find amcl)/examples/amcl_diff.launch"/>
+
+
+<!--configuring the navigation stack : move_base-->
+	<node name="move_base" type="move_base" pkg="move_base" respawn="false" output="screen">
+
+
+
+		<rosparam file="$(find hope_server)/src/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+		<rosparam file="$(find hope_server)/src/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+		<rosparam file="$(find hope_server)/src/local_costmap_params.yaml" command="load" />
+		<rosparam file="$(find hope_server)/src/global_costmap_params.yaml" command="load" />
+		<rosparam file="$(find hope_server)/src/base_local_planner_params.yaml" command="load" />
+
+		
+
+	</node>
+
+
+
+
+<node name="waypoints.py" pkg="hope_server" type="waypoints.py"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</launch>
